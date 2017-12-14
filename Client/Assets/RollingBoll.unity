@@ -187,8 +187,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5, z: 1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!33 &214206661
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -304,8 +304,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5, z: 1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!33 &601260982
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -354,10 +354,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 435317b1b875f40a688fdbd80cd25c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectAddress: ws://172.29.17.54:5678
+  connectAddress: ws://172.29.17.50:5678
   playerPrefab: {fileID: 100338, guid: 40046bae76ac54bffb59f14f47d9ba1b, type: 2}
   otherPlayerPrefab: {fileID: 1000013530691402, guid: 8da97395e89154d00aeaf2c9abf021e2,
     type: 2}
+  itemPrefab: {fileID: 1489342272876478, guid: 03acd1bb898a9b94398e19e1eb461bed, type: 2}
 --- !u!114 &710887332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,8 +510,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5, z: 1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!33 &1247206989
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -679,8 +680,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5, z: 1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!33 &1981664882
 MeshFilter:
   m_ObjectHideFlags: 0

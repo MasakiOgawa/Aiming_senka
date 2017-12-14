@@ -3,11 +3,14 @@ using System.Collections;
 
 public class DestroyEffect : MonoBehaviour {
 
+	[SerializeField]
+	private ParticleSystem ps;
+
 	void Update ()
 	{
-
-		if(Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.C))
-		   Destroy(transform.gameObject);
-	
+		if (ps.IsAlive() == false)
+		{
+			Destroy(transform.gameObject);
+		}
 	}
 }

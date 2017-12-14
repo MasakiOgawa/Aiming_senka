@@ -1,78 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Timers;
 using Newtonsoft.Json;
 using WebSocketSample.RPC;
 
 namespace WebSocketSample.Server
 {
-    public class GameModel
-    {
-        Dictionary<int, Player> players = new Dictionary<int, Player>();
-        int uidCounter;
+	public class GameModel
+	{
+		Dictionary<int, Player> players = new Dictionary<int, Player>();
+		int uidCounter;
 
-        public event Action<string, string> sendTo;
-        public event Action<string> broadcast;
+		public event Action<string, string> sendTo;
+		public event Action<string> broadcast;
 
-        public void OnUpdate()
-        {
-            Sync();
-        }
+		public GameModel()
+		{
+			StartSpawnTimer();
+		}
 
-        public void OnPing(string senderId)
-        {
-            Console.WriteLine(">> Ping");
+		public void OnUpdate()
+		{
+			Sync();
+		}
 
-            var pingRpc = new Ping(new PingPayload("pong"));
-            var pingJson = JsonConvert.SerializeObject(pingRpc);
-            sendTo(pingJson, senderId);
+		public void OnPing(string senderId)
+		{
+			Console.WriteLine(">> Ping");
 
-            Console.WriteLine("<< Pong");
-        }
+			var pingRpc = new Ping(new PingPayload("pong"));
+			var pingJson = JsonConvert.SerializeObject(pingRpc);
+			sendTo(pingJson, senderId);
 
-        public void OnLogin(string senderId, LoginPayload loginPayload)
-        {
-            Console.WriteLine(">> Login");
+			Console.WriteLine("<< Pong");
+		}
 
-            var player = new Player(uidCounter++, loginPayload.Name, new Position(0f, 0f, 0f));
-            players[player.Uid] = player;
+		public void OnLogin(string senderId, LoginPayload loginPayload)
+		{
+			Console.WriteLine(">> Login");
 
-            var loginResponseRpc = new LoginResponse(new LoginResponsePayload(player.Uid));
-            var loginResponseJson = JsonConvert.SerializeObject(loginResponseRpc);
-            sendTo(loginResponseJson, senderId);
+			var player = new Player(uidCounter++, loginPayload.Name, new Position(0f, 0f, 0f));
+			players[player.Uid] = player;
 
-            Console.WriteLine(player.ToString() + " login.");
-        }
+			var loginResponseRpc = new LoginResponse(new LoginResponsePayload(player.Uid));
+			var loginResponseJson = JsonConvert.SerializeObject(loginResponseRpc);
+			sendTo(loginResponseJson, senderId);
 
-        public void OnPlayerUpdate(string senderId, PlayerUpdatePayload playerUpdatePayload)
-        {
-            Console.WriteLine(">> PlayerUpdate");
+			Console.WriteLine(player.ToString() + " login.");
+		}
 
-            Player player;
-            if (players.TryGetValue(playerUpdatePayload.Id, out player))
-            {
-                player.SetPosition(playerUpdatePayload.Position);
-            }
-        }
+		public void OnPlayerUpdate(string senderId, PlayerUpdatePayload playerUpdatePayload)
+		{
+			Console.WriteLine(">> PlayerUpdate");
 
-        void Sync()
-        {
-            if (players.Count == 0) return;
+			Player player;
+			if (players.TryGetValue(playerUpdatePayload.Id, out player))
+			{
+				player.SetPosition(playerUpdatePayload.Position);
+			}
+		}
 
-            var movedPlayers = new List<RPC.Player>();
-            foreach (var player in players.Values)
-            {
-                if (!player.isPositionChanged) continue;
+		void Sync()
+		{
+			if (players.Count == 0) return;
 
-                var playerRpc = new RPC.Player(player.Uid, player.Position);
-                movedPlayers.Add(playerRpc);
-                player.isPositionChanged = false;
-            }
+			var movedPlayers = new List<RPC.Player>();
+			foreach (var player in players.Values)
+			{
+				if (!player.isPositionChanged) continue;
 
-            if (movedPlayers.Count == 0) return;
+				var playerRpc = new RPC.Player(player.Uid, player.Position);
+				movedPlayers.Add(playerRpc);
+				player.isPositionChanged = false;
+			}
 
-            var syncRpc = new Sync(new SyncPayload(movedPlayers));
-            var syncJson = JsonConvert.SerializeObject(syncRpc);
-            broadcast(syncJson);
-        }
-    }
+			if (movedPlayers.Count == 0) return;
+
+			var syncRpc = new Sync(new SyncPayload(movedPlayers));
+			var syncJson = JsonConvert.SerializeObject(syncRpc);
+			broadcast(syncJson);
+		}
+
+		void StartSpawnTimer()
+		{
+			var random = new Random();
+			var timer = new Timer(3000);
+			timer.Elapsed += (_, __) =>
+			{
+				if (players.Count == 0) return;
+
+				var randomX = random.Next(-5, 5);
+				var randomZ = random.Next(-5, 5);
+				var position = new Position(randomX, 0.5f, randomZ);
+				var spawnRpc = new Spawn(new SpawnPayload(position));
+				var spawnJson = JsonConvert.SerializeObject(spawnRpc);
+				broadcast(spawnJson);
+
+				Console.WriteLine("<< Spawn");
+			};
+			timer.Start();
+		}
+	}
 }
