@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-    }
+		GameObject.Find("Main Camera").GetComponent<ThirdPersonCamera>().setPos(transform);
+	}
 
     // 固定フレームレートで呼び出されるハンドラ
     void FixedUpdate()

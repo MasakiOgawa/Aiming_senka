@@ -10,7 +10,7 @@ using System.Collections;
 public class ThirdPersonCamera : MonoBehaviour
 {
 	public float smooth = 3f;		// カメラモーションのスムーズ化用変数
-	Transform standardPos;			// the usual position for the camera, specified by a transform in the game
+	public Transform standardPos;			// the usual position for the camera, specified by a transform in the game
 	Transform frontPos;			// Front Camera locater
 	Transform jumpPos;			// Jump Camera locater
 	
@@ -21,7 +21,7 @@ public class ThirdPersonCamera : MonoBehaviour
 	void Start()
 	{
 		// 各参照の初期化
-		standardPos = GameObject.Find ("CamPos").transform;
+		//standardPos = GameObject.Find ("CamPos").transform;
 		
 		if(GameObject.Find ("FrontPos"))
 			frontPos = GameObject.Find ("FrontPos").transform;
@@ -30,8 +30,8 @@ public class ThirdPersonCamera : MonoBehaviour
 			jumpPos = GameObject.Find ("JumpPos").transform;
 
 		//カメラをスタートする
-			transform.position = standardPos.position;	
-			transform.forward = standardPos.forward;	
+			//transform.position = standardPos.position;	
+			//transform.forward = standardPos.forward;	
 	}
 
 	
@@ -87,5 +87,12 @@ public class ThirdPersonCamera : MonoBehaviour
 		bQuickSwitch = false;
 				transform.position = Vector3.Lerp(transform.position, jumpPos.position, Time.fixedDeltaTime * smooth);	
 				transform.forward = Vector3.Lerp(transform.forward, jumpPos.forward, Time.fixedDeltaTime * smooth);		
+	}
+
+	public void setPos(Transform tra)
+	{
+		standardPos = tra.transform;
+		transform.position = tra.transform.position;
+		transform.forward = tra.transform.forward;
 	}
 }
